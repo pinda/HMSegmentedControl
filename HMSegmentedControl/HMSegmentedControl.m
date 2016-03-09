@@ -344,6 +344,7 @@
             CGFloat y = roundf(CGRectGetHeight(self.frame) - self.selectionIndicatorHeight) / 2 - imageHeight / 2 + ((self.selectionIndicatorLocation == HMSegmentedControlSelectionIndicatorLocationUp) ? self.selectionIndicatorHeight : 0);
             CGFloat x = self.segmentWidth * idx + (self.segmentWidth - imageWidth)/2.0f;
             CGRect rect = CGRectMake(x, y, imageWidth, imageHeight);
+            CGRect fullRect = CGRectMake(self.segmentWidth * idx, 0, self.segmentWidth, oldRect.size.height);
             
             CALayer *imageLayer = [CALayer layer];
             imageLayer.frame = rect;
@@ -369,7 +370,7 @@
                 [self.scrollView.layer addSublayer:verticalDividerLayer];
             }
             
-            [self addBackgroundAndBorderLayerWithRect:rect];
+            [self addBackgroundAndBorderLayerWithRect:fullRect];
         }];
     } else if (self.type == HMSegmentedControlTypeTextImages){
 		[self.sectionImages enumerateObjectsUsingBlock:^(id iconImage, NSUInteger idx, BOOL *stop) {
@@ -383,11 +384,13 @@
             CGFloat imageXOffset = self.segmentEdgeInset.left; // Start with edge inset
             CGFloat textXOffset  = self.segmentEdgeInset.left;
             CGFloat textWidth = 0;
+            CGRect fullRect;
             
             if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleFixed) {
                 imageXOffset = (self.segmentWidth * idx) + (self.segmentWidth / 2.0f) - (imageWidth / 2.0f);
                 textXOffset = self.segmentWidth * idx;
                 textWidth = self.segmentWidth;
+                fullRect = CGRectMake(self.segmentWidth * idx, 0, self.segmentWidth, oldRect.size.height);
             } else if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
                 // When we are drawing dynamic widths, we need to loop the widths array to calculate the xOffset
                 CGFloat xOffset = 0;
@@ -402,9 +405,10 @@
                     i++;
                 }
                 
-                imageXOffset = xOffset + ([self.segmentWidthsArray[idx] floatValue] / 2.0f) - (imageWidth / 2.0f); //(self.segmentWidth / 2.0f) - (imageWidth / 2.0f)
-                textXOffset = xOffset;
                 textWidth = [self.segmentWidthsArray[idx] floatValue];
+                imageXOffset = xOffset + (textWidth / 2.0f) - (imageWidth / 2.0f); //(self.segmentWidth / 2.0f) - (imageWidth / 2.0f)
+                textXOffset = xOffset;
+                fullRect = CGRectMake(self.segmentWidth * idx, 0, textWidth, oldRect.size.height);
             }
             
             CGFloat imageYOffset = roundf((CGRectGetHeight(self.frame) - self.selectionIndicatorHeight) / 2.0f);
@@ -441,7 +445,7 @@
 			titleLayer.contentsScale = [[UIScreen mainScreen] scale];
             [self.scrollView.layer addSublayer:titleLayer];
 			
-            [self addBackgroundAndBorderLayerWithRect:imageRect];
+            [self addBackgroundAndBorderLayerWithRect:fullRect];
         }];
 	}
     
