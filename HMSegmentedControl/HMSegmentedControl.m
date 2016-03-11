@@ -777,6 +777,14 @@
     [self.scrollView scrollRectToVisible:rectToScrollTo animated:animated];
 }
 
+- (void)updateForOffset:(CGPoint)offset
+{
+    [CATransaction begin];
+    [CATransaction setValue: (id) kCFBooleanTrue forKey: kCATransactionDisableActions];
+    self.selectionIndicatorStripLayer.position = CGPointMake((offset.x / 2) + (self.selectionIndicatorStripLayer.frame.size.width / 2), self.selectionIndicatorStripLayer.position.y);
+    [CATransaction commit];
+}
+
 #pragma mark - Index Change
 
 - (void)setSelectedSegmentIndex:(NSInteger)index {
