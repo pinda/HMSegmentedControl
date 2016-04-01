@@ -415,7 +415,7 @@
             imageYOffset = imageYOffset - (imageHeight/2);
             imageXOffset = imageXOffset - ([self measureTitleAtIndex:idx].width/2) - imageWidth/2;
             
-            CGRect imageRect = CGRectMake(imageXOffset, imageYOffset, imageWidth, imageHeight);
+            CGRect imageRect = CGRectMake(ceilf(imageXOffset - self.titleImageEdgeInsets.left - self.titleImageEdgeInsets.right), ceilf(imageYOffset + self.titleImageEdgeInsets.top), imageWidth, imageHeight);
             CGRect textRect = CGRectMake(textXOffset + 5, yOffset, textWidth, stringHeight);
             
             // Fix rect position/size to avoid blurry labels
